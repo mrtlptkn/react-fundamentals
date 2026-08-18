@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import UsersTable, { type User } from "../components/UsersTable";
-import { fetchUsers } from "../clients/UserClient";
+import { fetchUsers, fetchUsersWithAxios } from "../clients/UserClient";
 
 const UserPage: React.FC  = () => {
 
@@ -25,7 +25,7 @@ const UserPage: React.FC  = () => {
         // `await` is only allowed within async functions and at the top levels of modules
         // sayfa ilk açıldığında api çağırıları tek sefere mahsus ilk yüklemede burada yapılır
        (async () => {
-         const response = await fetchUsers();
+         const response = await fetchUsersWithAxios();
          setData(response);
          setLoading(false);
        })();  
