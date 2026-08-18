@@ -4,15 +4,18 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 import MyButton from './components/MyButton'
+import UsersTable, { type User } from './components/UsersTable'
 
 
-
-function App() {
+export const AppDefault = ()=> {
   const [count, setCount] = useState(0)
+  const onButtonTextChanged = (value:string) => {
+    console.log('buton ismi güncellendi' + value);
+    setCount(count + 10);
+  }
 
-  return (
-    <>
-      <section id="center">
+  return <>
+   <section id="center">
         <div className="hero">
           <img src={heroImg} className="base" width="170" height="179" alt="" />
           <img src={reactLogo} className="framework" alt="React logo" />
@@ -32,18 +35,15 @@ function App() {
           Count is {count}
         </button>
         {/* props ile component içine initial değeri attık */}
-       <MyButton text='Button1' />
-        <MyButton text='Button2' />
+       <MyButton />
+        <MyButton text='Button2' onButtonTextChanged={onButtonTextChanged} />
         <MyButton text='Button3' onButtonTextChanged={(value:string) => {
           console.log('buton ismi güncellendi' + value);
           setCount(count + 5);
         }}  />
         <MyButton 
         text='Button4' 
-        onButtonTextChanged={(value:string) => {
-          console.log('buton ismi güncellendi' + value);
-          setCount(count + 10);
-        }} />
+        onButtonTextChanged={onButtonTextChanged} />
       </section>
 
       <div className="ticks"></div>
@@ -130,7 +130,53 @@ function App() {
       </section>
 
       <div className="ticks"></div>
-      <section id="spacer"></section>
+  </>
+}
+
+
+function App() {
+  
+  // ilk açılışta ekranda userTable görünmesin istiyoruz.
+  const [showUserTable,setShowUserTable] = useState(false);
+  // mockData
+  const [users,] = useState<User[]>([
+    {
+      id:1,
+      name:'Ahmet',
+      email:'ahmet@test.com',
+      phone:'535 510 13 13'
+    },
+    {
+      id:2,
+      name:'Ayşe',
+      email:'ayşe@test.com', 
+      phone:'532 232 52 25'
+    }
+  ]); // complex type data array object
+  
+  return (
+    <>
+
+    {/* <AppDefault /> */}
+     
+      <section id="spacer">
+
+{/* setShowUserTable() bizi re-render'a zorlar */}
+{/* artık UsersTable güncel showUserTable değişken değeri üzerine re-rendera yer alır. */}
+
+        <input type='checkbox' 
+        checked={showUserTable} 
+        onChange={(e) => setShowUserTable(e.target.checked)} /> User Table Show/Hide
+        <br></br>
+        
+        {/* güvenli dom manuplasyonu ya domda var yada yok */}
+        {showUserTable && <UsersTable users={users} />}
+
+        {showUserTable && <UsersTable users={users} />}
+
+        
+
+      </section>
     </>
   )
 }
