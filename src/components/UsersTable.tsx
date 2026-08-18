@@ -1,7 +1,7 @@
 // Kullanıcı bilgilerini tabloda göstermek istediğimiz bir component. Bu componentin içerisinde kullanıcı bilgilerini göstermek için bir tablo oluşturacağız. Kullanıcı bilgilerini props olarak alacağız ve bu bilgileri tablo satırlarında göstereceğiz.
 // Kullanıcı bilgilerini props olarak almak için bir interface tanımlayacağız. Bu interface içerisinde kullanıcı bilgilerini tutacak olan değişkenleri tanımlayacağız. Bu değişkenler id, name, email ve phone olacak. Bu değişkenlerin tiplerini de belirleyeceğiz. id number, name string, email string ve phone string olacak.
 
-import { faker } from "@faker-js/faker";
+import { da, faker } from "@faker-js/faker";
 import React, { type CSSProperties } from "react";
 import { useEffect } from "react";
 
@@ -17,6 +17,7 @@ export interface User {
 
 interface UsersTableProps {
   users: User[];
+  onItemAdded?(user:User):void;
 }
 
 export function UsersTable01({ users }: UsersTableProps) {
@@ -26,7 +27,7 @@ export function UsersTable01({ users }: UsersTableProps) {
 };
 
 // React.FC -> Function Component ile Arrow Function yazım şekli
-const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
+const UsersTable: React.FC<UsersTableProps> = ({ users,onItemAdded }) => {
 
     const [userCount,setUserCount] = React.useState(users.length);
 
@@ -71,9 +72,20 @@ const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
   const addUser = () => {
     // virtual dom tetiklenmesi için ve güncel state değerlerinin react tarafından algılanması için setState şart.
     // 1. Yöntem
-    users.push({id:users.length + 1, name:faker.internet.username(),email:faker.internet.email(),phone:faker.phone.number()})
+    //users.push({id:users.length + 1, name:faker.internet.username(),email:faker.internet.email(),phone:faker.phone.number()})
+
+    
+
 
     // 2.Yöntem Parent componente event olarak fırlat ve parent componentte set state çalıştırma
+    // 2.Yöntem daha best practice ve daha kullanışlık bir zayıf bağlılık sağlayan bir teknik. 
+
+    // Böyle bir eventimiz varsa
+    if(onItemAdded) {
+      const event = {id:users.length + 1, name:faker.internet.username(),email:faker.internet.email(),phone:faker.phone.number()};
+      // eventi publish edelim.
+      onItemAdded(event);
+    }
     
 
     // Eğer component içinden state değişimi olacaksa props'a değer eklendikten sonra virtual bu durumu anlasın diye setState çalıştırmak zorundayız.

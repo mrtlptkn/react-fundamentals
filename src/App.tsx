@@ -139,7 +139,7 @@ function App() {
   // ilk açılışta ekranda userTable görünmesin istiyoruz.
   const [showUserTable,setShowUserTable] = useState(false);
   // mockData
-  const [users,] = useState<User[]>([
+  const [users,setUsers] = useState<User[]>([
     {
       id:1,
       name:'Ahmet',
@@ -153,6 +153,12 @@ function App() {
       phone:'532 232 52 25'
     }
   ]); // complex type data array object
+
+
+  const onItemAddedSubscriber = (user:User) => {
+    // [...users,user] -> spread operator ile users object array yeni user object ekle
+    setUsers([...users,user]);
+  }
   
   return (
     <>
@@ -170,9 +176,10 @@ function App() {
         <br></br>
         
         {/* güvenli dom manuplasyonu ya domda var yada yok */}
-        {showUserTable && <UsersTable users={users} />}
+        {showUserTable && <UsersTable users={users} onItemAdded={onItemAddedSubscriber} />}
 
-        {showUserTable && <UsersTable users={users} />}
+{/* bu yöntemde state kopyalandığı her UsersTable componenti aynı object refrensını props olarak alır birebir kopya grid oluşur.  */}
+        {showUserTable && <UsersTable users={users} onItemAdded={onItemAddedSubscriber} />}
 
         
 
