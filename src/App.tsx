@@ -5,6 +5,7 @@ import heroImg from './assets/hero.png'
 import './App.css'
 import MyButton from './components/MyButton'
 import UsersTable, { type User } from './components/UsersTable'
+import UserPage from './pages/UserPage'
 
 
 export const AppDefault = ()=> {
@@ -133,10 +134,9 @@ export const AppDefault = ()=> {
   </>
 }
 
+export const Demo01 = () => {
 
-function App() {
-  
-  // ilk açılışta ekranda userTable görünmesin istiyoruz.
+   // ilk açılışta ekranda userTable görünmesin istiyoruz.
   const [showUserTable,setShowUserTable] = useState(false);
   // mockData
   const [users,setUsers] = useState<User[]>([
@@ -159,13 +159,8 @@ function App() {
     // [...users,user] -> spread operator ile users object array yeni user object ekle
     setUsers([...users,user]);
   }
-  
-  return (
-    <>
 
-    {/* <AppDefault /> */}
-     
-      <section id="spacer">
+  return   <section id="spacer">
 
 {/* setShowUserTable() bizi re-render'a zorlar */}
 {/* artık UsersTable güncel showUserTable değişken değeri üzerine re-rendera yer alır. */}
@@ -184,6 +179,22 @@ function App() {
         
 
       </section>
+}
+
+function App() {
+  
+ 
+  
+  return (
+    <>
+
+    <UserPage />
+
+    {/* <AppDefault /> */}
+
+    {/* <Demo01 /> */}
+     
+    
     </>
   )
 }
