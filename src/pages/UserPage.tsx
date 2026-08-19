@@ -8,8 +8,6 @@ import _ from "lodash";
 
 const UserPage: React.FC  = () => {
 
-
-   
     // React da apiden veri yüklerken önce sayfa doma mount edilir. first render
     // daha sonra useEffect hook içinde async load fetch function çalışıyor. setState ile
     // state güncelleniyor. O sırada 2.render'a giriyoruz. re-render
@@ -59,6 +57,8 @@ const UserPage: React.FC  = () => {
         // Sadece dizinin referansını yeniliyoruz ve yeni item'ı sonuna ekliyoruz.
         return [...prevUsers, item];
     });
+
+ 
          
     
     },[]) // [] genelde boş dependency kullanırız. Çünkü fonksiyonları genel olarak sayfa unmount olduğı sürece yeniden oluşturmak gereksiz bir maliyettir.

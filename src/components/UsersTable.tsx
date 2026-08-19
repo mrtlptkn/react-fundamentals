@@ -2,7 +2,8 @@
 // Kullanıcı bilgilerini props olarak almak için bir interface tanımlayacağız. Bu interface içerisinde kullanıcı bilgilerini tutacak olan değişkenleri tanımlayacağız. Bu değişkenler id, name, email ve phone olacak. Bu değişkenlerin tiplerini de belirleyeceğiz. id number, name string, email string ve phone string olacak.
 
 import { da, faker } from "@faker-js/faker";
-import React, { type CSSProperties } from "react";
+import _ from "lodash";
+import React, { useCallback, useMemo, useState, type CSSProperties } from "react";
 import { useEffect } from "react";
 
 // Bu component hangi tipte bir veri ile çalışacak
@@ -33,6 +34,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users,onItemAdded }) => {
     console.log('...child rendering');
 
     const [userCount,setUserCount] = React.useState(users.length);
+    const [searchText,setSearchText] = useState('');
 
     // React Component  lifecyle
     // 1. mount -> first render
@@ -95,12 +97,50 @@ const UsersTable: React.FC<UsersTableProps> = ({ users,onItemAdded }) => {
     // setUserCount(userCount + 1)
   }
 
+  // yani component içindeki bir değerin component render aındığında yeniden hesaplanmaması için
+  // useMemo hook kullanırız
+  // searchText değer değişirse evet filtered Value değişkeni hesaplansın ama bişey değişmezse 
+  // başka bir state değişir ve componen render zorlarsa benim filtered value tekrar hesaplanmasın.
+ 
+  const calculateFilteredValue = () => {
+      // console.log('...calculating', users.filter(x=> x.name.includes(searchText)));
+    return users.filter(x=> x.name.includes(searchText));
+  }
+
+  // Component içindeki bazı hesaplamaların gereksiz yere state değişimlerinde tekrar tekrar hesaplanmaması için değişken değerleri useMemo kullanılarak memoize edilir.
+  //useMemo sadece [searchText] değiştiğinde kendini güncellesin şeklinde bir tanımlama yaptık.  
+  const filteredValue = useMemo(() => calculateFilteredValue(),[searchText]);
+  // const filteredValueNoMemo = calculateFilteredValue();
+
+
+
+  // Arama yaparken debounce işlemleri ile aranacak değerini değeri kullanıcı arama hızına göre ayarlanmasını sağlayarak gereksiz her bir tuşa basıştaki render almaları ortadan kaldırıyoruz
+  const debouncedSearch = useCallback(
+  _.debounce((searchValue: string) => {
+    console.log('Debounced Arama İsteği Gidiyor:', searchValue);
+    // API isteği veya asıl arama işlemi burada yapılır
+    // server side search için ise api istekleri arka arkaya atılmaz network istekleri daha rahat yönetilir.
+    setSearchText(searchValue);
+    // clientside search için rendering işlemleri daha rahat olur
+  }, 500),
+  [] // Sadece bileşen ilk yüklendiğinde yaratılsın
+);
+
+
+  const onSearchText = (e:any) => {
+    console.log('input-value', e.target.value);
+    //  setSearchText(e.target.value);
+    debouncedSearch(e.target.value);
+  }
+
   return (
     <>
     Toplam Kullanıcı Sayısı: {users.length}
     <br></br>
     <button onClick={addUser}>1  Adet Kullanıcı Ekle</button>
     <br></br>
+
+    <input type="text" onInput={onSearchText} placeholder="arama yapınız" />
 
 
 <table style={tableStyle}>
@@ -114,7 +154,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ users,onItemAdded }) => {
     </thead>
     {/* reactda listeleme işlemlerinde map function kullanılır */}
     <tbody>
-    {users.map((user:User) =>  
+    {filteredValue.map((user:User) =>  
 
     <tr key={user.id}>
         <td style={cellStyle}>{user.name}</td>
