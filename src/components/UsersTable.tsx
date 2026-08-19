@@ -103,13 +103,13 @@ const UsersTable: React.FC<UsersTableProps> = ({ users,onItemAdded }) => {
   // başka bir state değişir ve componen render zorlarsa benim filtered value tekrar hesaplanmasın.
  
   const calculateFilteredValue = () => {
-      // console.log('...calculating', users.filter(x=> x.name.includes(searchText)));
+      console.log('calculateFilteredValue çalıştı');
     return users.filter(x=> x.name.includes(searchText));
   }
 
   // Component içindeki bazı hesaplamaların gereksiz yere state değişimlerinde tekrar tekrar hesaplanmaması için değişken değerleri useMemo kullanılarak memoize edilir.
   //useMemo sadece [searchText] değiştiğinde kendini güncellesin şeklinde bir tanımlama yaptık.  
-  const filteredValue = useMemo(() => calculateFilteredValue(),[searchText]);
+  const filteredValue = useMemo(() => calculateFilteredValue(),[users, searchText]);
   // const filteredValueNoMemo = calculateFilteredValue();
 
 
