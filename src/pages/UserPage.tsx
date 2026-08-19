@@ -1,7 +1,7 @@
 
 // Page component olması sebebi ile şuan props yapmadık
 
-import { useCallback, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import UsersTable, { type User } from "../components/UsersTable";
 import { fetchUsers, fetchUsersWithAxios } from "../clients/UserClient";
 import _ from "lodash";
@@ -50,15 +50,8 @@ const UserPage: React.FC  = () => {
     const onItemAddListener = useCallback((item:User) => {
         console.log('item', item);
      
-
-    // lodashsiz versiyon
-    setUsers(prevUsers => {
-        // En doğru, standart ve performanslı yöntem sığ kopyadır (Shallow Copy).
-        // Sadece dizinin referansını yeniliyoruz ve yeni item'ı sonuna ekliyoruz.
-        return [...prevUsers, item];
-    });
-
- 
+   
+    setUsers(prevUsers => [...prevUsers, item]);
          
     
     },[]) // [] genelde boş dependency kullanırız. Çünkü fonksiyonları genel olarak sayfa unmount olduğı sürece yeniden oluşturmak gereksiz bir maliyettir.
