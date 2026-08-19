@@ -5,7 +5,7 @@ import heroImg from './assets/hero.png'
 import './App.css'
 import MyButton from './components/MyButton'
 import UsersTable, { type User } from './components/UsersTable'
-import UserPage from './pages/UserPage'
+import UseRefDemo from './pages/UseRefDemo'
 
 
 export const AppDefault = ()=> {
@@ -181,6 +181,9 @@ export const Demo01 = () => {
       </section>
 }
 
+
+
+
 function App() {
   
  
@@ -188,11 +191,13 @@ function App() {
   return (
     <>
 
-    <UserPage />
+    {/* <UserPage /> */}
 
     {/* <AppDefault /> */}
 
     {/* <Demo01 /> */}
+
+    {<UseRefDemo />}
      
     
     </>
