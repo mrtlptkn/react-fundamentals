@@ -29,6 +29,9 @@ export function UsersTable01({ users }: UsersTableProps) {
 // React.FC -> Function Component ile Arrow Function yazım şekli
 const UsersTable: React.FC<UsersTableProps> = ({ users,onItemAdded }) => {
 
+
+    console.log('...child rendering');
+
     const [userCount,setUserCount] = React.useState(users.length);
 
     // React Component  lifecyle
@@ -82,19 +85,19 @@ const UsersTable: React.FC<UsersTableProps> = ({ users,onItemAdded }) => {
 
     // Böyle bir eventimiz varsa
     if(onItemAdded) {
-      const event = {id:users.length + 1, name:faker.internet.username(),email:faker.internet.email(),phone:faker.phone.number()};
+      const event = {id:faker.number.int(), name:faker.internet.username(),email:faker.internet.email(),phone:faker.phone.number()};
       // eventi publish edelim.
       onItemAdded(event);
     }
     
 
     // Eğer component içinden state değişimi olacaksa props'a değer eklendikten sonra virtual bu durumu anlasın diye setState çalıştırmak zorundayız.
-    setUserCount(userCount + 1)
+    // setUserCount(userCount + 1)
   }
 
   return (
     <>
-    Toplam Kullanıcı Sayısı: {userCount}
+    Toplam Kullanıcı Sayısı: {users.length}
     <br></br>
     <button onClick={addUser}>1  Adet Kullanıcı Ekle</button>
     <br></br>
@@ -125,5 +128,13 @@ const UsersTable: React.FC<UsersTableProps> = ({ users,onItemAdded }) => {
   );
 };
 
-export default UsersTable;
+
+// export edilirken component memoisation yapıldı
+// ama hala rendering olmaya devam edecek çünkü propstan geçilen değerler ref type değişkenler
+// %90 props ref type çalışacak.
+// export default UsersTable;
+export default React.memo(UsersTable);
+
+
+// Son Test -> Component React.memo ile sarmalladığında eğer propsları ref type ise bu durumda onItemAdded değerleri için useCallback kullanmak zorundayız. Bunu yazmazsak, component memoise olsada function işi bozuyor. 
 
