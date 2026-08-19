@@ -13,10 +13,16 @@ export type CounterContextType = {
 // provider ise işi yöneten state yönetim fonksiyonlarını tutan yapı (servis)
 // children ise bu state paylaşacağımız componentlerdir. (Consumer)
 export const CounterProvider = ({ children }: { children: React.ReactNode }) => {
-  const [count, setCount] = React.useState(0); // sayacın değerini tutan state
+  const [count, setCount] = React.useState(localStorage.getItem('count') ? parseInt(localStorage.getItem('count')!) : 0); // sayacın değerini tutan state
 
-  const increment = () => setCount(count + 1);
-  const decrement = () => setCount(count - 1);
+  const increment = () => {
+    setCount(count + 1);
+    localStorage.setItem('count', (count + 1).toString());
+  };
+  const decrement = () => {
+    setCount(count - 1);
+    localStorage.setItem('count', (count - 1).toString());
+  };
 
   return (
     <CounterContext.Provider value={{ count, increment, decrement }}>
