@@ -6,6 +6,7 @@ import './App.css'
 import MyButton from './components/MyButton'
 import UsersTable, { type User } from './components/UsersTable'
 import UseRefDemo from './pages/UseRefDemo'
+import ContextAPIPage from './pages/ContextAPIPage'
 
 
 export const AppDefault = ()=> {
@@ -197,7 +198,9 @@ function App() {
 
     {/* <Demo01 /> */}
 
-    {<UseRefDemo />}
+    {/* {<UseRefDemo />} */}
+
+    <ContextAPIPage />
      
     
     </>
