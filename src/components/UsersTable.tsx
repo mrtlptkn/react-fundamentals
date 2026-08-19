@@ -104,7 +104,8 @@ const UsersTable: React.FC<UsersTableProps> = ({ users,onItemAdded }) => {
  
   const calculateFilteredValue = () => {
       console.log('calculateFilteredValue çalıştı');
-    return users.filter(x=> x.name.includes(searchText));
+      // clientside search için filtreleme işlemi Regex tercih ederiz.
+    return users.filter(x=> new RegExp(searchText, 'i').test(x.name));
   }
 
   // Component içindeki bazı hesaplamaların gereksiz yere state değişimlerinde tekrar tekrar hesaplanmaması için değişken değerleri useMemo kullanılarak memoize edilir.
