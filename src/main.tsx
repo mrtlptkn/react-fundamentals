@@ -1,36 +1,15 @@
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import Sample from './Sample';
-import Title from './Title';
-import TitleWithStyle from './TitleWithStyle';
-import Counter from './Counter';
-import UserForm from './UserForm';
-
-// import App from './App.tsx';
+import TodoPage from './todos/TodoPage';
 
 // root içerisinde birden fazla component göstermek için wrapper component tanımı yaparız.
 
-export function Wrapper() {
-	return (
-		<>
-			<Title id={1} text={'Başlık 1'} />
-			<br></br>
+createRoot(document.getElementById('root')!).render(<TodoPage />);
 
-			<UserForm />
-			<br></br>
-			<Sample />
-			<br></br>
-			<Title id={2} text={'Başlık 2'} />
-			<br></br>
-			<TitleWithStyle
-				id={3}
-				text={'Başlık 3'}
-				sx={{ color: 'red', fontWeight: 'bold' }}
-			/>
-			<br></br>
-			<Counter />
-		</>
-	);
-}
-
-createRoot(document.getElementById('root')!).render(<Wrapper />);
+// Alt + Shift + O unused code line remove
+// Alt + Shift + F code satırı düzenleme
+// CTRL + K + C -> Comment line
+// CTRL + K + U -> Uncomment
+// CTRL + J -> Terminal kısa yolu 
+// CTRL + B -> Explorer penceresi aç kapat
+// CTRL + C -> terminali sonlandırma kısa yolu
