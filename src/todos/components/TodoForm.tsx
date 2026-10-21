@@ -41,7 +41,7 @@ export default function TodoForm({
 	// sorumluluk sadece form değişimini yakalamak
 	const handleAdd = () => {
 		const newItem = {
-			id: uuidv4(), // npm uuid kullanabiliriz
+			_id: uuidv4(), // npm uuid kullanabiliriz
 			title: titleRef.current?.value || '',
 			content: contentRef.current?.value || '',
 			completed: completedRef.current?.checked || false,
@@ -54,7 +54,7 @@ export default function TodoForm({
 	// sorumluluk sadece form değişimini yakalamak
 	const handleUpdate = () => {
 		const updatedItem = {
-			id: editItem?.id || '-1', // npm uuid kullanabiliriz
+			_id: editItem?._id || '-1', // npm uuid kullanabiliriz
 			title: titleRef.current?.value || '',
 			content: contentRef.current?.value || '',
 			completed: completedRef.current?.checked || false,

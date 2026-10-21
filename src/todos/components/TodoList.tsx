@@ -28,7 +28,7 @@ export function TodoList({
 							padding: 10,
 							borderColor: 'gray',
 						}}
-						key={item.id}
+						key={item._id}
 					>
 						<div>{item.title}</div>
 						<div>
@@ -39,7 +39,7 @@ export function TodoList({
 							{mode !== 'edit' && (
 								<>
 									<button onClick={() => handleEdit(item)}>Düzenle</button>
-									<button onClick={() => handleDelete(item.id)}>Sil</button>
+									<button onClick={() => handleDelete(item._id)}>Sil</button>
 								</>
 							)}
 						</div>

@@ -6,36 +6,37 @@ import { TodoList } from './components/TodoList';
 
 // sunucudan gelecek tüm modeller dto interface olarak react da tanımlanır.
 export interface Todo {
-	id: string;
+	_id: string;
+	id?: number;
 	title?: string; // optional data
-	content: string;
+	content?: string; // optional data
 	completed: boolean;
 }
 
 export default function TodoPageV2() {
 	// obj,array ve func referans hatalarını engellemek için const kullanın.
 	// value type değerlerde değişkenin değeri alt satırlada değişecek ise let kullanım.
-	const initData: Todo[] = [
-		{
-			id: uuidv4(),
-			title: 'Alışveriş',
-			content: 'Market Alışverişi',
-			completed: false,
-		},
-		{
-			id: uuidv4(),
-			title: 'Araç Bakım',
-			content: 'Genel Bakım',
-			completed: false,
-		},
-		{
-			id: uuidv4(),
-			title: 'Rapor Hazırla',
-			content: '4.Çeyrek Raporu',
-			completed: true,
-		},
-	];
-	const [items, setItems] = React.useState<Todo[]>(initData);
+	// const initData: Todo[] = [
+	// 	{
+	// 		id: uuidv4(),
+	// 		title: 'Alışveriş',
+	// 		content: 'Market Alışverişi',
+	// 		completed: false,
+	// 	},
+	// 	{
+	// 		id: uuidv4(),
+	// 		title: 'Araç Bakım',
+	// 		content: 'Genel Bakım',
+	// 		completed: false,
+	// 	},
+	// 	{
+	// 		id: uuidv4(),
+	// 		title: 'Rapor Hazırla',
+	// 		content: '4.Çeyrek Raporu',
+	// 		completed: true,
+	// 	},
+	// ];
+	const [items, setItems] = React.useState<Todo[]>([]);
 	// searchText her bir state değişiminden yararlananrak sayfa yeniden render edileceği için items state bozmadan elimizde items state üzerinden filtrelenmiş bir anlık liste oluşturur ve displayItems her render sonrası çalıaşcağı için ve displayItems ekrana render alırken data source olarak kullandığı için tek list state sorunu çözdük.
 	const [searchText, setSearchText] = React.useState('');
 	const [mode, setMode] = React.useState<'add' | 'edit'>('add');
@@ -46,10 +47,28 @@ export default function TodoPageV2() {
 
 	console.log('searchText', searchText);
 
+	React.useEffect(() => {
+		console.log('items changed', items);
+
+		fetch('https://jsonplaceholder.typicode.com/todos')
+			.then((response) => response.json())
+			.then((data: Todo[]) =>
+				data.map((item) => ({
+					_id: uuidv4(), // kendi _id yapımızı ürettik.
+					id: item.id,
+					title: item.title,
+					content: item.content,
+					completed: item.completed,
+				})),
+			)
+			.then((data) => setItems(data))
+			.catch((error) => console.error('Error fetching todos:', error));
+	}, []);
+
 	const displayItems = searchText
 		? items.filter((item) => {
 				const regex = new RegExp(searchText, 'i');
-				return regex.test(item.title || '') || regex.test(item.content);
+				return regex.test(item.title || '') || regex.test(item.content || '');
 			})
 		: items;
 
@@ -69,7 +88,7 @@ export default function TodoPageV2() {
 	const handleDelete = (id: string) => {
 		if (!window.confirm('Are you sure you want to delete this item?')) return;
 
-		const remaining = items.filter((x) => x.id !== id);
+		const remaining = items.filter((x) => x._id !== id);
 		setItems([...remaining]);
 	};
 
@@ -77,7 +96,7 @@ export default function TodoPageV2() {
 	const handleUpdate = (updatedItem: Todo) => {
 		if (editItem) {
 			// seçilen birşey varsa
-			const existingItem = items.find((x) => x.id === updatedItem.id);
+			const existingItem = items.find((x) => x._id === updatedItem._id);
 
 			if (existingItem) {
 				existingItem.title = updatedItem.title || '';
@@ -85,7 +104,7 @@ export default function TodoPageV2() {
 				existingItem.completed = updatedItem.completed || false;
 
 				const updatedItems = items.map((item: Todo) => {
-					if (item.id === existingItem.id) {
+					if (item._id === existingItem._id) {
 						// güncellenecek nesneyi bul -> eğer güncellenecek ise onu döndür
 						return existingItem;
 					}
