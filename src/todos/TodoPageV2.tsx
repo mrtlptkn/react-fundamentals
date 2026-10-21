@@ -1,10 +1,12 @@
 import React from 'react';
 import debounce from '../utils/debounce';
 import TodoForm from './components/TodoForm';
+import { v4 as uuidv4 } from 'uuid';
+import { TodoList } from './components/TodoList';
 
 // sunucudan gelecek tüm modeller dto interface olarak react da tanımlanır.
 export interface Todo {
-	id: number;
+	id: string;
 	title?: string; // optional data
 	content: string;
 	completed: boolean;
@@ -15,19 +17,19 @@ export default function TodoPageV2() {
 	// value type değerlerde değişkenin değeri alt satırlada değişecek ise let kullanım.
 	const initData: Todo[] = [
 		{
-			id: 1,
+			id: uuidv4(),
 			title: 'Alışveriş',
 			content: 'Market Alışverişi',
 			completed: false,
 		},
 		{
-			id: 2,
+			id: uuidv4(),
 			title: 'Araç Bakım',
 			content: 'Genel Bakım',
 			completed: false,
 		},
 		{
-			id: 3,
+			id: uuidv4(),
 			title: 'Rapor Hazırla',
 			content: '4.Çeyrek Raporu',
 			completed: true,
@@ -39,7 +41,7 @@ export default function TodoPageV2() {
 	const [mode, setMode] = React.useState<'add' | 'edit'>('add');
 
 	// edit durumunda seçili item form componentine props olarak aktarmak için böyle yaptık.
-	// const selectedId = React.useRef<number>(-1); // bundan tümü ile kurtulabiliriz ? 
+	// const selectedId = React.useRef<number>(-1); // bundan tümü ile kurtulabiliriz ?
 	const [editItem, setEditItem] = React.useState<Todo | undefined>(undefined);
 
 	console.log('searchText', searchText);
@@ -51,12 +53,6 @@ export default function TodoPageV2() {
 			})
 		: items;
 
-	// useRef kullanımı reRender süreçlerimizi optimize eder. Form gibi yoğun veri değişimi işlemlerinde kullanırız.
-	const titleRef = React.useRef<HTMLInputElement>(null);
-	const contentRef = React.useRef<HTMLInputElement>(null);
-	const completedRef = React.useRef<HTMLInputElement>(null);
-	const selectedId = React.useRef<number>(-1); // non-selected
-
 	// arrow function
 	const handleAdd = (newItem: Todo) => {
 		setItems([newItem, ...items]);
@@ -66,25 +62,11 @@ export default function TodoPageV2() {
 	// <button onClick={() => handleEdit(item)}>Düzenle</button>
 	const handleEdit = (item: Todo) => {
 		setMode('edit');
-
-		//titleRef.current içinde value değeri undefined değilse atanabilir olduğu için kontrol ettik.
-		if (titleRef.current) {
-			titleRef.current.value = item.title || '';
-		}
-		if (contentRef.current) {
-			contentRef.current.value = item.content;
-		}
-		if (completedRef.current) {
-			completedRef.current.checked = item.completed;
-		}
-
-		selectedId.current = item.id;
-
 		setEditItem(item);
 	};
 
 	// <button onClick={() => handleDelete(item.id)}>Sil</button>
-	const handleDelete = (id: number) => {
+	const handleDelete = (id: string) => {
 		if (!window.confirm('Are you sure you want to delete this item?')) return;
 
 		const remaining = items.filter((x) => x.id !== id);
@@ -93,7 +75,8 @@ export default function TodoPageV2() {
 
 	// <button onClick={() => handleUpdate(item)}>Güncelle</button>
 	const handleUpdate = (updatedItem: Todo) => {
-		if (selectedId.current !== -1) {
+		if (editItem) {
+			// seçilen birşey varsa
 			const existingItem = items.find((x) => x.id === updatedItem.id);
 
 			if (existingItem) {
@@ -124,18 +107,7 @@ export default function TodoPageV2() {
 	// form sıfırlama
 	const formReset = () => {
 		setMode('add'); // ilk mod
-
-		if (titleRef.current) {
-			titleRef.current.value = '';
-		}
-		if (contentRef.current) {
-			contentRef.current.value = '';
-		}
-		if (completedRef.current) {
-			completedRef.current.checked = false;
-		}
-
-		selectedId.current = -1; // seçili id resetlendi
+		setEditItem(undefined); // edit item resetlendi
 	};
 
 	console.log('...rendering');
@@ -166,40 +138,19 @@ export default function TodoPageV2() {
 			/>
 
 			{/* Search Bar */}
+			{/* TODO -> Search ayrı bir component ile yapılabilir yada TodoList içerisine entegre kullanabiliriz. */}
 			<div>
 				<input onInput={onSearch} placeholder="Arama yapınız" />
 			</div>
 
 			{/* Todo listesi */}
-			{displayItems.map((item: Todo) => {
-				return (
-					<div
-						style={{
-							display: 'flex',
-							justifyContent: 'space-between',
-							border: 1,
-							borderStyle: 'solid',
-							padding: 10,
-							borderColor: 'gray',
-						}}
-						key={item.id}
-					>
-						<div>{item.title}</div>
-						<div>
-							{/* const [mode, setMode] = React.useState<'add' | 'edit'>('add'); */}
-
-							{mode === 'edit' && <button onClick={formReset}>İptal Et</button>}
-
-							{mode !== 'edit' && (
-								<>
-									<button onClick={() => handleEdit(item)}>Düzenle</button>
-									<button onClick={() => handleDelete(item.id)}>Sil</button>
-								</>
-							)}
-						</div>
-					</div>
-				);
-			})}
+			<TodoList
+				displayItems={displayItems}
+				mode={mode}
+				onEdit={handleEdit}
+				onDelete={handleDelete}
+				onCancel={formReset}
+			/>
 		</>
 	);
 }

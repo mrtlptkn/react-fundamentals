@@ -1,6 +1,6 @@
 import React from 'react';
-import type { Todo } from '../TodoPage';
-
+import type { Todo } from '../TodoPageV2';
+import { v4 as uuidv4 } from 'uuid';
 // component dışardan bir sorumluluk alıcak ise bunlar için props tanımlanır.
 
 export type TodoFormProps = {
@@ -41,25 +41,39 @@ export default function TodoForm({
 	// sorumluluk sadece form değişimini yakalamak
 	const handleAdd = () => {
 		const newItem = {
-			id: Date.now(), // npm uuid kullanabiliriz
+			id: uuidv4(), // npm uuid kullanabiliriz
 			title: titleRef.current?.value || '',
 			content: contentRef.current?.value || '',
 			completed: completedRef.current?.checked || false,
 		};
 		console.log('Adding new item:', newItem);
 		onAdd?.(newItem);
+		formReset();
 	};
 
 	// sorumluluk sadece form değişimini yakalamak
 	const handleUpdate = () => {
 		const updatedItem = {
-			id: Date.now(), // npm uuid kullanabiliriz
+			id: editItem?.id || '-1', // npm uuid kullanabiliriz
 			title: titleRef.current?.value || '',
 			content: contentRef.current?.value || '',
 			completed: completedRef.current?.checked || false,
 		};
 		console.log('Updating item:', updatedItem);
 		onUpdate?.(updatedItem);
+		formReset();
+	};
+
+	const formReset = () => {
+		if (titleRef.current) {
+			titleRef.current.value = '';
+		}
+		if (contentRef.current) {
+			contentRef.current.value = '';
+		}
+		if (completedRef.current) {
+			completedRef.current.checked = false;
+		}
 	};
 
 	return (

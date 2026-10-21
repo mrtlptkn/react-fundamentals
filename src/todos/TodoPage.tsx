@@ -2,7 +2,7 @@ import React from 'react';
 import debounce from '../utils/debounce';
 
 // sunucudan gelecek tüm modeller dto interface olarak react da tanımlanır.
-export interface Todo {
+interface Todo {
 	id: number;
 	title?: string; // optional data
 	content: string;
@@ -45,7 +45,6 @@ export default function TodoPage() {
 				return regex.test(item.title || '') || regex.test(item.content);
 			})
 		: items;
-
 
 	// useRef kullanımı reRender süreçlerimizi optimize eder. Form gibi yoğun veri değişimi işlemlerinde kullanırız.
 	const titleRef = React.useRef<HTMLInputElement>(null);
@@ -141,7 +140,7 @@ export default function TodoPage() {
 
 	const debouncedSearch = React.useMemo(
 		() => debounce((value: string) => setSearchText(value), 300),
-		[]
+		[],
 	);
 
 	const onSearch = (e: React.FormEvent<HTMLInputElement>) => {
