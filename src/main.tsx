@@ -10,6 +10,7 @@ import {
 } from 'react-router';
 // import * as ReactRouter from 'react-router';
 import TodoPage from './todos/TodoPage';
+import ProductPage from './products/ProductPage';
 
 // root içerisinde birden fazla component göstermek için wrapper component tanımı yaparız.
 // routeda tanımlı iç sayfalarda stateleri kaybetmemek için Link component kullanalım. Ama external sayfalara gidecek isek a href kullanabiliriz. Zaten external sayfaları link component ile açamayız.
@@ -20,6 +21,7 @@ export default function Layout() {
 			<nav>
 				<Link to="/">Anasayfa</Link> <Link to="/todos-v2">Todos V2</Link>{' '}
 				<Link to="/todos-v1">Todos V1</Link>{' '}
+				<Link to="/products-v1">Products V1</Link>{' '}
 				<a
 					href="https://www.google.com"
 					target="_blank"
@@ -71,6 +73,10 @@ const routes = createBrowserRouter([
 				path: 'todos-v1',
 				element: <TodoPage />,
 			},
+			{
+				path: 'products-v1',
+				element: <ProductPage />,
+			}
 		],
 	},
 ]);
