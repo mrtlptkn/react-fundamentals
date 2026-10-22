@@ -1,3 +1,7 @@
+import { Provider } from 'react-redux';
+import store from './store/store';
+import ProductPage from './products/ProductPage';
+import CartSummaryPage from './products/CartSummaryPage';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 // import TodoPageV2 from './todos/TodoPageV2';
@@ -8,9 +12,10 @@ import {
 	Outlet,
 	RouterProvider,
 } from 'react-router';
-// import * as ReactRouter from 'react-router';
+import { ContextProvider } from './context/CartContext';
 import TodoPage from './todos/TodoPage';
-import ProductPage from './products/ProductPage';
+import ProductPageV2 from './productsv2/ProductPageV2';
+import CartSummaryPageV2 from './productsv2/CartSummaryPageV2';
 
 // root içerisinde birden fazla component göstermek için wrapper component tanımı yaparız.
 // routeda tanımlı iç sayfalarda stateleri kaybetmemek için Link component kullanalım. Ama external sayfalara gidecek isek a href kullanabiliriz. Zaten external sayfaları link component ile açamayız.
@@ -22,6 +27,9 @@ export default function Layout() {
 				<Link to="/">Anasayfa</Link> <Link to="/todos-v2">Todos V2</Link>{' '}
 				<Link to="/todos-v1">Todos V1</Link>{' '}
 				<Link to="/products-v1">Products V1</Link>{' '}
+				<Link to="/products-v2">Products V2 (RTK Query)</Link>{' '}
+				<Link to="/cart-summary">Cart Summary</Link>{' '}
+				<Link to="/cart-summary-v2">Cart Summary (Redux)</Link>{' '}
 				<a
 					href="https://www.google.com"
 					target="_blank"
@@ -76,13 +84,29 @@ const routes = createBrowserRouter([
 			{
 				path: 'products-v1',
 				element: <ProductPage />,
-			}
+			},
+			{
+				path: 'products-v2',
+				element: <ProductPageV2 />,
+			},
+			{
+				path: 'cart-summary',
+				element: <CartSummaryPage />,
+			},
+			{
+				path: 'cart-summary-v2',
+				element: <CartSummaryPageV2 />,
+			},
 		],
 	},
 ]);
 
 createRoot(document.getElementById('root')!).render(
-	<RouterProvider router={routes} />,
+	<Provider store={store}>
+		<ContextProvider>
+			<RouterProvider router={routes} />
+		</ContextProvider>
+	</Provider>,
 );
 
 // Alt + Shift + O unused code line remove

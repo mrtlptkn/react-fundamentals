@@ -41,10 +41,32 @@ export const ContextProvider = ({
 	const [items, setItems] = useState<CartItem[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const addItem = (item: CartItem) => {
+		setItems((prevItems) => {
+			// aynı ürün sepete tekrar ekleniyorsa adeti 1 arttır. eğer sepette ürün yoksa  [...prevItems, item]; ile sepete yeni ürün ekle
+			const existingItem = prevItems.find(
+				(i) => i.productId === item.productId,
+			);
+			if (existingItem) {
+				return prevItems.map((i) =>
+					i.productId === item.productId
+						? { ...i, quantity: i.quantity + item.quantity }
+						: i,
+				);
+			}
+			return [...prevItems, item];
+		});
+		// genel sepet toplamı
+		setTotal((prevTotal) => prevTotal + item.price * item.quantity);
 		console.log(item);
 	};
 	const removeItem = (productId: number) => {
-		console.log(productId);
+		setItems((prevItems) => {
+			const item = prevItems.find((i) => i.productId === productId);
+			if (item) {
+				setTotal((prevTotal) => prevTotal - item.price * item.quantity);
+			}
+			return prevItems.filter((i) => i.productId !== productId);
+		});
 	};
 	const clearCart = () => {
 		setItems([]);
