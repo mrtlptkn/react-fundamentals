@@ -14,8 +14,12 @@ import {
 import { ContextProvider } from './context/CartContext';
 import TodoPage from './todos/TodoPage';
 import ProductPageV2 from './productsv2/ProductPageV2';
-import CartSummaryPageV2 from './productsv2/CartSummaryPageV2';
 import MemoPage from './memoisation/MemoPage';
+import React from 'react';
+// bu tekniğin ismine code-splitting tekniği diyoruz.
+const CartSummaryPageV2Lazy = React.lazy(
+	() => import('./productsv2/CartSummaryPageV2'),
+);
 
 // root içerisinde birden fazla component göstermek için wrapper component tanımı yaparız.
 // routeda tanımlı iç sayfalarda stateleri kaybetmemek için Link component kullanalım. Ama external sayfalara gidecek isek a href kullanabiliriz. Zaten external sayfaları link component ile açamayız.
@@ -96,7 +100,13 @@ const routes = createBrowserRouter([
 			},
 			{
 				path: 'cart-summary-v2',
-				element: <CartSummaryPageV2 />,
+				// const CartSummaryPageV2Lazy = React.lazy(() => import('./productsv2/CartSummaryPageV2'),
+	// );
+				element: (
+					<React.Suspense fallback={<div>Loading...</div>}>
+						<CartSummaryPageV2Lazy />
+					</React.Suspense>
+				),
 			},
 			{
 				path: 'memo',
