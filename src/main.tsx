@@ -4,7 +4,6 @@ import ProductPage from './products/ProductPage';
 import CartSummaryPage from './products/CartSummaryPage';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-// import TodoPageV2 from './todos/TodoPageV2';
 import TodoPageV2 from './todos/TodoPageV2';
 import {
 	createBrowserRouter,
@@ -16,6 +15,7 @@ import { ContextProvider } from './context/CartContext';
 import TodoPage from './todos/TodoPage';
 import ProductPageV2 from './productsv2/ProductPageV2';
 import CartSummaryPageV2 from './productsv2/CartSummaryPageV2';
+import MemoPage from './memoisation/MemoPage';
 
 // root içerisinde birden fazla component göstermek için wrapper component tanımı yaparız.
 // routeda tanımlı iç sayfalarda stateleri kaybetmemek için Link component kullanalım. Ama external sayfalara gidecek isek a href kullanabiliriz. Zaten external sayfaları link component ile açamayız.
@@ -30,6 +30,7 @@ export default function Layout() {
 				<Link to="/products-v2">Products V2 (RTK Query)</Link>{' '}
 				<Link to="/cart-summary">Cart Summary</Link>{' '}
 				<Link to="/cart-summary-v2">Cart Summary (Redux)</Link>{' '}
+				<Link to="/memo">Memo Page</Link>{' '}
 				<a
 					href="https://www.google.com"
 					target="_blank"
@@ -96,6 +97,10 @@ const routes = createBrowserRouter([
 			{
 				path: 'cart-summary-v2',
 				element: <CartSummaryPageV2 />,
+			},
+			{
+				path: 'memo',
+				element: <MemoPage />,
 			},
 		],
 	},
