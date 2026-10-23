@@ -1,6 +1,6 @@
 import React from 'react';
 import debounce from '../utils/debounce';
-import TodoForm from './components/TodoForm';
+import TodoRHFForm from './components/TodoFormRHF';
 import { v4 as uuidv4 } from 'uuid';
 import { TodoList } from './components/TodoList';
 
@@ -143,7 +143,7 @@ export default function TodoPageV2() {
 	return (
 		<>
 			{/* Todo Form */}
-			<TodoForm
+			<TodoRHFForm
 				editItem={editItem}
 				mode={mode}
 				onAdd={(item) => {
