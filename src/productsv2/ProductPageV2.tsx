@@ -166,6 +166,8 @@ export default function ProductPageV2() {
 	const [page, setPage] = React.useState(1);
 	const PAGE_SIZE = 12;
 
+	const [number, setNumber] = React.useState(0);
+
 	const {
 		data: products = [],
 		isLoading: loading,
@@ -173,6 +175,8 @@ export default function ProductPageV2() {
 	} = useGetProductsQuery();
 
 	const filtered = React.useMemo(() => {
+		console.log('...filtering');
+
 		let list = products;
 
 		if (!showDiscontinued) {
@@ -214,6 +218,12 @@ export default function ProductPageV2() {
 							? 'Yükleniyor…'
 							: `${filtered.length} ürün gösteriliyor${products.length !== filtered.length ? ` / ${products.length} toplam` : ''}`}
 					</p>
+					<button
+						className="rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition"
+						onClick={() => setNumber(number + 1)}
+					>
+						Number: {number}{' '}
+					</button>
 				</div>
 
 				{/* Toolbar */}

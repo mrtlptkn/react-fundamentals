@@ -9,12 +9,13 @@ export const productApi = createApi({
 	baseQuery: fetchBaseQuery({
 		baseUrl: 'https://services.odata.org/northwind/northwind.svc/',
 	}),
+	keepUnusedDataFor: 60, // Keep unused data for 60 seconds
 	// The "endpoints" represent operations and requests for this server
 	endpoints: (builder) => ({
 		// The `getPosts` endpoint is a "query" operation that returns data.
 		// The return value is a `Post[]` array, and it takes no arguments.
 		getProducts: builder.query<Product[], void>({
-			// The URL for the request is '/fakeApi/posts'
+			// The URL for the request is '/Products'
 			query: () => '/Products',
 			transformResponse: (response: { value: Product[] }) => response.value,
 		}),
